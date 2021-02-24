@@ -1,0 +1,25 @@
+{
+  "name": "Battery Notification",
+  "description": "Enter your project description",
+  "author": {
+    "name": "mi11km",
+    "email": "mi11km.program@gmail.com"
+  },
+  "version": "0.1.0",
+  "binaryname": "battery-notification",
+  "frontend": {
+    "dir": "frontend",
+    "install": "npm install",
+    "build": "npm run build",
+    "bridge": "src",
+    "serve": "npm run serve"
+  },
+  "tags": "",
+  "WailsVersion": "",
+  "CrossCompile": false,
+  "Platform": "",
+  "Architecture": "",
+  "LdFlags": "",
+  "GoPath": "",
+  "UseFirebug": false
+}
