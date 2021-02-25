@@ -1,60 +1,51 @@
 <template>
-  <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" clipped fixed app>
-      <v-list dense>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Dashboard</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-settings</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Settings</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar app fixed clipped-left>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
-    </v-app-bar>
-    <v-main>
-      <v-container fluid class="px-0">
-        <v-layout justify-center align-center class="px-0">
-          <hello-world></hello-world>
-        </v-layout>
-      </v-container>
+  <v-app class="main">
+    <v-main class="flex justify-center align-center">
+            <v-col class="text-center text-h3 green--text">バッテリー残量通知くん</v-col>
+      <v-card width="600" height="480" class="center-posi">
+        <v-form class="form">
+          <v-text-field outlined type="text" class="mb-1" label="通知する名前" hint="Slackの通知名に使われます"></v-text-field>
+          <v-text-field outlined type="url" class="mb-1" label="通知するSlackの Webhook URL"></v-text-field>
+          <v-text-field outlined type="number" class="mb-1" label="バッテリーを確認する間隔(秒）"></v-text-field>
+          <v-text-field outlined type="number" class="mb-1" label="何％以下になったら通知するか"></v-text-field>
+
+          <v-btn class="float-left" color="success">編集する</v-btn>
+          <v-btn class="float-right" color="success">オン</v-btn>
+        </v-form>
+      </v-card>
     </v-main>
-    <v-footer app fixed>
-      <span style="margin-left:1em">&copy; You</span>
+
+    <v-footer app class="transparent">
+      <v-col class="text-center">
+        © バッテリー残量通知くん {{ new Date().getFullYear() }} All rights reserve.
+      </v-col>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-  import HelloWorld from "./components/HelloWorld.vue"
-
-  export default {
-    data: () => ({
-      drawer: false
-    }),
-    components: {
-      HelloWorld
-    },
-    props: {
-      source: String
+export default {
+  data() {
+    return {
+      isEditable: true,
     }
   }
+}
 </script>
 
-<style>
-  .logo {
-    width: 16em;
-  }
+<style scoped>
+.main {
+  background: rgb(0, 255, 199);
+  background: linear-gradient(90deg, rgba(0, 255, 199, 0.68531162464986) 0%, rgba(7, 255, 0, 0.8169642857142857) 100%);
+}
+
+.center-posi {
+  margin: 0 auto;
+}
+
+.form {
+  max-width: 80%;
+  margin: 0 auto;
+  padding-top: 32px;
+}
 </style>
