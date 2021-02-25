@@ -19,6 +19,7 @@
           <v-btn class="float-right" color="success">オン</v-btn>
         </v-form>
       </v-card>
+      <h2 v-if="errorMessage.length > 0">{{ errorMessage }}</h2>
     </v-main>
 
     <v-footer app class="transparent">
@@ -39,29 +40,30 @@ export default {
       confirmationInterval: 60,
       notificationCondition: 30,
       settings: {},
+      errorMessage: "",
     }
   },
   mounted() {
     window.backend.Settings.Load()
         .then(settings => {
-          // try {
-          this.settings = JSON.parse(settings)
-          this.name = this.settings.name
-          this.url = this.settings.webhookUrl
-          this.confirmationInterval = this.settings.confirmationInterval
-          this.notificationCondition = this.settings.notificationCondition
-          // } catch (e) {
-          // this.errorMessage = "Unable to load todo settings"
-          // setTimeout(() => {
-          //   this.errorMessage = ""
-          // }, 3000)
-          // }
-          // })
-          // .catch(error => {
-          // this.errorMessage = error
-          // setTimeout(() => {
-          //   this.errorMessage = ""
-          // }, 3000)
+          try {
+            this.settings = JSON.parse(settings)
+            this.name = this.settings.name
+            this.url = this.settings.webhookUrl
+            this.confirmationInterval = this.settings.confirmationInterval
+            this.notificationCondition = this.settings.notificationCondition
+          } catch (e) {
+            this.errorMessage = "Unable to load todo settings"
+            setTimeout(() => {
+              this.errorMessage = ""
+            }, 3000)
+          }
+        })
+        .catch(error => {
+          this.errorMessage = error
+          setTimeout(() => {
+            this.errorMessage = ""
+          }, 3000)
         })
   },
   watch: {
@@ -107,5 +109,17 @@ export default {
   max-width: 80%;
   margin: 0 auto;
   padding-top: 32px;
+}
+
+h2 {
+  text-align: center;
+  color: white;
+  background-color: red;
+  min-width: 230px;
+  max-width: 550px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 40px auto;
+
 }
 </style>
