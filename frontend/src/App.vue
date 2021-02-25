@@ -1,15 +1,21 @@
 <template>
   <v-app class="main">
     <v-main class="flex justify-center align-center">
-            <v-col class="text-center text-h3 green--text">バッテリー残量通知くん</v-col>
+      <v-col class="text-center text-h3 green--text">バッテリー残量通知くん</v-col>
       <v-card width="600" height="480" class="center-posi">
         <v-form class="form">
-          <v-text-field outlined type="text" class="mb-1" label="通知する名前" hint="Slackの通知名に使われます"></v-text-field>
-          <v-text-field outlined type="url" class="mb-1" label="通知するSlackの Webhook URL"></v-text-field>
-          <v-text-field outlined type="number" class="mb-1" label="バッテリーを確認する間隔(秒）"></v-text-field>
-          <v-text-field outlined type="number" class="mb-1" label="何％以下になったら通知するか"></v-text-field>
+          <v-text-field v-model="name" :disabled="!isEditable" outlined type="text" class="mb-1" label="通知する名前"
+                        hint="Slackの通知名に使われます"></v-text-field>
+          <v-text-field v-model="url" :disabled="!isEditable" outlined type="url" class="mb-1"
+                        label="通知するSlackの Webhook URL"></v-text-field>
+          <v-text-field v-model="confirmationInterval" :disabled="!isEditable" outlined type="number" class="mb-1"
+                        label="バッテリーを確認する間隔(秒）"></v-text-field>
+          <v-text-field v-model="notificationCondition" :disabled="!isEditable" outlined type="number" class="mb-1"
+                        label="何％以下になったら通知するか"></v-text-field>
 
-          <v-btn class="float-left" color="success">編集する</v-btn>
+          <v-btn class="float-left" color="success" @click="isEditable = !isEditable">
+            {{ isEditable ? "保存する" : "編集する" }}
+          </v-btn>
           <v-btn class="float-right" color="success">オン</v-btn>
         </v-form>
       </v-card>
@@ -27,8 +33,15 @@
 export default {
   data() {
     return {
-      isEditable: true,
+      isEditable: false,
+      name: "",
+      url: "",
+      confirmationInterval: 60,
+      notificationCondition: 30,
     }
+  },
+  mounted() {
+    console.log(this.isEditable)
   }
 }
 </script>

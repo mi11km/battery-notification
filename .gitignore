@@ -1,5 +1,8 @@
 .jshint
 .idea
+info.plist
+.DS_Store
+
 build/
 frontend/dist
 frontend/node_modules
