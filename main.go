@@ -1,17 +1,21 @@
 package main
 
 import (
+	"battery-notification/internal/settings"
+	"log"
+
 	"github.com/leaanthony/mewn"
 	"github.com/wailsapp/wails"
 )
 
-func basic() string {
-	return "Hello World!"
-}
-
 func main() {
 	js := mewn.String("./frontend/dist/app.js")
 	css := mewn.String("./frontend/dist/app.css")
+
+	mySettings, err := settings.New()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	app := wails.CreateApp(&wails.AppConfig{
 		Width:     1024,
@@ -22,6 +26,6 @@ func main() {
 		Resizable: true,
 		Colour:    "#131313",
 	})
-	app.Bind(basic)
+	app.Bind(mySettings)
 	app.Run()
 }

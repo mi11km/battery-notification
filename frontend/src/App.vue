@@ -1,7 +1,7 @@
 <template>
   <v-app class="main">
     <v-main class="flex justify-center align-center">
-      <v-col class="text-center text-h3 green--text">バッテリー残量通知くん</v-col>
+      <!--      <v-col class="text-center text-h3 green&#45;&#45;text">バッテリー残量通知くん</v-col>-->
       <v-card width="600" height="480" class="center-posi">
         <v-form class="form">
           <v-text-field v-model="name" :disabled="!isEditable" outlined type="text" class="mb-1" label="通知する名前"
@@ -13,7 +13,7 @@
           <v-text-field v-model="notificationCondition" :disabled="!isEditable" outlined type="number" class="mb-1"
                         label="何％以下になったら通知するか"></v-text-field>
 
-          <v-btn class="float-left" color="success" @click="isEditable = !isEditable">
+          <v-btn class="float-left" color="success" @click="saveSettings()">
             {{ isEditable ? "保存する" : "編集する" }}
           </v-btn>
           <v-btn class="float-right" color="success">オン</v-btn>
@@ -38,10 +38,57 @@ export default {
       url: "",
       confirmationInterval: 60,
       notificationCondition: 30,
+      settings: {},
     }
   },
   mounted() {
-    console.log(this.isEditable)
+    window.backend.Settings.Load()
+        .then(settings => {
+          // try {
+          this.settings = JSON.parse(settings)
+          this.name = this.settings.name
+          this.url = this.settings.webhookUrl
+          this.confirmationInterval = this.settings.confirmationInterval
+          this.notificationCondition = this.settings.notificationCondition
+          // } catch (e) {
+          // this.errorMessage = "Unable to load todo settings"
+          // setTimeout(() => {
+          //   this.errorMessage = ""
+          // }, 3000)
+          // }
+          // })
+          // .catch(error => {
+          // this.errorMessage = error
+          // setTimeout(() => {
+          //   this.errorMessage = ""
+          // }, 3000)
+        })
+  },
+  watch: {
+    settings: {
+      handler: function (settings) {
+        window.backend.Settings.Save(JSON.stringify(settings))
+      },
+      deep: true
+    }
+  },
+  methods: {
+    saveSettings() {
+      if (this.isEditable) {
+        let name = this.name && this.name.trim()
+        let url = this.url && this.url.trim()
+        let confirmationInterval = this.confirmationInterval && this.confirmationInterval
+        let notificationCondition = this.notificationCondition && this.notificationCondition
+        if (name === "" || url === "") return
+        this.settings = {
+          name: name,
+          webhookUrl: url,
+          confirmationInterval: confirmationInterval,
+          notificationCondition: notificationCondition
+        }
+      }
+      this.isEditable = !this.isEditable
+    }
   }
 }
 </script>
