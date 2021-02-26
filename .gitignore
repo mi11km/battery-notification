@@ -2,7 +2,6 @@
 .idea
 info.plist
 .DS_Store
-settings.json
 
 build/
 frontend/dist

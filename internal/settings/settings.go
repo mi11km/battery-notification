@@ -28,7 +28,7 @@ func (s *Settings) WailsInit(runtime *wails.Runtime) error {
 	if err != nil {
 		return err
 	}
-	s.filename = path.Join(homedir, "battery_notification-settings.json")
+	s.filename = path.Join(homedir, "battery_notification_settings.json")
 
 	s.ensureFileExists()
 	return nil
