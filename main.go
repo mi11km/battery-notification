@@ -1,6 +1,7 @@
 package main
 
 import (
+	"battery-notification/internal/confirmbattery"
 	"battery-notification/internal/settings"
 	"log"
 
@@ -16,6 +17,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	myConfirmBattery, err := confirmbattery.New()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	app := wails.CreateApp(&wails.AppConfig{
 		Width:     1024,
@@ -27,5 +32,6 @@ func main() {
 		Colour:    "#131313",
 	})
 	app.Bind(mySettings)
+	app.Bind(myConfirmBattery)
 	app.Run()
 }
