@@ -1,6 +1,9 @@
 <template>
   <v-app class="main">
     <v-main class="flex justify-center align-center">
+
+      <h2 v-if="errorMessage.length > 0" class="pt-2">{{ errorMessage }}</h2>
+
       <v-card width="600" height="480" class="center-posi">
         <v-form class="form">
           <v-text-field v-model="name" :disabled="!isEditable" outlined type="text" class="mb-1" label="通知する名前"
@@ -22,17 +25,17 @@
           </v-btn>
         </v-form>
       </v-card>
+
       <p class="pt-2 text">バッテリー残量を定期的に確認して、指定した％以下になればSlackに通知してくれるアプリ。使い方は設定項目を入力して、監視スタート！！を押すだけ。</p>
       <p class="text-center pt-2">Slackの Webhook URL の取得は
         <a href="https://media-radar.jp/contents/meditsubu/slack_incoming_webhook/">こちらを参照</a>
       </p>
-      <h2 v-if="errorMessage.length > 0" class="pt-2">{{ errorMessage }}</h2>
+
     </v-main>
 
     <v-footer app class="transparent">
       <v-col class="text-center">
         © バッテリー残量通知くん {{ new Date().getFullYear() }} All rights reserve. <br>
-        <a href="http://www.onlinewebfonts.com">oNline Web Fonts</a>
       </v-col>
     </v-footer>
   </v-app>
@@ -46,8 +49,8 @@ export default {
       isConfirming: false,
       name: "",
       url: "",
-      confirmationInterval: 60,
-      notificationCondition: 30,
+      confirmationInterval: null,
+      notificationCondition: null,
       settings: {},
       errorMessage: "",
     }
@@ -62,17 +65,11 @@ export default {
             this.confirmationInterval = this.settings.confirmationInterval
             this.notificationCondition = this.settings.notificationCondition
           } catch (e) {
-            this.errorMessage = "Unable to load todo settings"
-            setTimeout(() => {
-              this.errorMessage = ""
-            }, 3000)
+            this.setErrorMessage("設定を読み込めませんでした。")
           }
         })
         .catch(error => {
-          this.errorMessage = error
-          setTimeout(() => {
-            this.errorMessage = ""
-          }, 3000)
+          this.setErrorMessage(error)
         })
   },
   watch: {
@@ -88,9 +85,12 @@ export default {
       if (this.isEditable) {
         let name = this.name && this.name.trim()
         let url = this.url && this.url.trim()
-        let confirmationInterval = this.confirmationInterval && this.confirmationInterval
-        let notificationCondition = this.notificationCondition && this.notificationCondition
-        if (name === "" || url === "") return
+        let confirmationInterval = this.confirmationInterval
+        let notificationCondition = this.notificationCondition
+        if (name === "" || url === "" | confirmationInterval === null | notificationCondition === null) {
+          this.setErrorMessage("すべての項目を入力してください。")
+          return
+        }
         this.settings = {
           name: name,
           webhookUrl: url,
@@ -108,6 +108,12 @@ export default {
     stopBatteryConfirmation() {
       this.isConfirming = false
       window.backend.ConfirmBattery.Stop()
+    },
+    setErrorMessage(message) {
+      this.errorMessage = message
+      setTimeout(() => {
+        this.errorMessage = ""
+      }, 3000)
     }
   }
 }
