@@ -12,10 +12,10 @@
           <v-text-field v-model="notificationCondition" :disabled="!isEditable" outlined type="number" class="mb-1"
                         label="何％以下になったら通知するか"></v-text-field>
 
-          <v-btn class="float-left" color="success" @click="saveSettings">
+          <v-btn :disabled="isConfirming" class="float-left" color="success" @click="saveSettings">
             {{ isEditable ? "保存する" : "編集する" }}
           </v-btn>
-          <v-btn class="float-right" color="success"
+          <v-btn :disabled="isEditable" class="float-right" color="success"
                  @click="isConfirming ? stopBatteryConfirmation() : startBatteryConfirmation()">{{
               isConfirming ? "監視ストップする！！" : "監視スタート！！"
             }}
