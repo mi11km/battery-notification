@@ -1,7 +1,6 @@
 <template>
   <v-app class="main">
     <v-main class="flex justify-center align-center">
-      <!--      <v-col class="text-center text-h3 green&#45;&#45;text">バッテリー残量通知くん</v-col>-->
       <v-card width="600" height="480" class="center-posi">
         <v-form class="form">
           <v-text-field v-model="name" :disabled="!isEditable" outlined type="text" class="mb-1" label="通知する名前"
@@ -9,17 +8,25 @@
           <v-text-field v-model="url" :disabled="!isEditable" outlined type="url" class="mb-1"
                         label="通知するSlackの Webhook URL"></v-text-field>
           <v-text-field v-model="confirmationInterval" :disabled="!isEditable" outlined type="number" class="mb-1"
-                        label="バッテリーを確認する間隔(秒）"></v-text-field>
+                        label="バッテリーを確認する間隔(秒)" hint=""></v-text-field>
           <v-text-field v-model="notificationCondition" :disabled="!isEditable" outlined type="number" class="mb-1"
                         label="何％以下になったら通知するか"></v-text-field>
 
-          <v-btn class="float-left" color="success" @click="saveSettings()">
+          <v-btn class="float-left" color="success" @click="saveSettings">
             {{ isEditable ? "保存する" : "編集する" }}
           </v-btn>
-          <v-btn class="float-right" color="success">オン</v-btn>
+          <v-btn class="float-right" color="success"
+                 @click="isConfirming ? stopBatteryConfirmation() : startBatteryConfirmation()">{{
+              isConfirming ? "監視ストップする！！" : "監視スタート！！"
+            }}
+          </v-btn>
         </v-form>
       </v-card>
-      <h2 v-if="errorMessage.length > 0">{{ errorMessage }}</h2>
+      <p class="pt-2 text">バッテリー残量を定期的に確認して、指定した％以下になればSlackに通知してくれるアプリ。使い方は設定項目を入力して、監視スタート！！を押すだけ。</p>
+      <p class="text-center pt-2">Slackの Webhook URL の取得は
+        <a href="https://media-radar.jp/contents/meditsubu/slack_incoming_webhook/" target="_blank">こちらを参照</a>
+      </p>
+      <h2 v-if="errorMessage.length > 0" class="pt-2">{{ errorMessage }}</h2>
     </v-main>
 
     <v-footer app class="transparent">
@@ -35,6 +42,7 @@ export default {
   data() {
     return {
       isEditable: false,
+      isConfirming: false,
       name: "",
       url: "",
       confirmationInterval: 60,
@@ -85,11 +93,19 @@ export default {
         this.settings = {
           name: name,
           webhookUrl: url,
-          confirmationInterval: confirmationInterval,
-          notificationCondition: notificationCondition
+          confirmationInterval: Number(confirmationInterval),
+          notificationCondition: Number(notificationCondition)
         }
       }
       this.isEditable = !this.isEditable
+    },
+    startBatteryConfirmation() {
+      this.isConfirming = true
+      window.backend.ConfirmBattery.Start(this.name, this.url, this.confirmationInterval, this.notificationCondition)
+    },
+    stopBatteryConfirmation() {
+      this.isConfirming = false
+      window.backend.ConfirmBattery.Stop()
     }
   }
 }
@@ -121,5 +137,10 @@ h2 {
   border-radius: 0.5rem;
   margin: 40px auto;
 
+}
+
+.text {
+  max-width: 600px;
+  margin: 0 auto;
 }
 </style>
