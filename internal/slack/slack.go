@@ -13,7 +13,6 @@ type Message struct {
 	Username  string `json:"username"`
 	Text      string `json:"text"`
 	IconEmoji string `json:"icon_emoji"`
-	//IconUrl   string `json:"icon_url"`
 }
 
 func NewMessage(username, text, iconEmoji string) *Message {

@@ -94,15 +94,16 @@ export default {
         this.settings = {
           name: name,
           webhookUrl: url,
-          confirmationInterval: Number(confirmationInterval),
-          notificationCondition: Number(notificationCondition)
+          confirmationInterval: confirmationInterval,
+          notificationCondition: notificationCondition
         }
       }
       this.isEditable = !this.isEditable
     },
     startBatteryConfirmation() {
       this.isConfirming = true
-      window.backend.ConfirmBattery.Start(this.name, this.url, this.confirmationInterval, this.notificationCondition)
+      window.backend.ConfirmBattery.Start(this.name, this.url,
+          Number(this.confirmationInterval), Number(this.notificationCondition))
     },
     stopBatteryConfirmation() {
       this.isConfirming = false
