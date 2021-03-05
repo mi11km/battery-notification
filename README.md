@@ -7,3 +7,7 @@
 - 通知するSlackの Webhook URL
 - バッテリーを確認する間隔
 - どのくらい以下になったら通知するか
+
+
+## ダウンロードはこちらから（Mac用だけです）
+https://github.com/mi11km/battery-notification/releases/tag/1.0.0
